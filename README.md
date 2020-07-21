@@ -1,2 +1,2 @@
 # PinguCam
-A video source for streams editors 
+A video source for stream editors 
