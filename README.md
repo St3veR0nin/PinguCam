@@ -1,6 +1,7 @@
 # PinguCam
 A video source for stream editors 
 
-On Windows: run with `py PinguCam_alpha.py` with images folder in same directory
+Just open the `run.bat` file, then in your stream editor apply a green chroma key. 
 
-On Linux: run with `python3.7 PinguCam_alpha.py`
+You are ready to go!
+
