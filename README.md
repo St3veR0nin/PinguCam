@@ -3,7 +3,7 @@ A video source for stream editors, that supports mouse tracking, voice detection
 
 You'll need python 3.6 to run this. After downloading Python 3.6, open the file `install_packages.bat` to install the required libraries.
 
-Then you can open the PinguCam with `run.bat`.
+Then you can open the PinguCam with `run.bat`. Or you can build the .exe file with `make_exe.bat`.
 
 You are ready to go! Enjoy!
 
