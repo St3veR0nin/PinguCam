@@ -1,7 +1,9 @@
 # PinguCam
-A video source for stream editors 
+A video source for stream editors, that supports mouse tracking, voice detection, and keyboard press.
 
-Just open the `run.bat` file, then in your stream editor apply a green chroma key. 
+You'll need python 3.6 to run this. After downloading Python 3.6, open the file `install_packages.bat` to install the required libraries.
 
-You are ready to go!
+Then you can open the PinguCam with `run.bat`.
+
+You are ready to go! Enjoy!
 
