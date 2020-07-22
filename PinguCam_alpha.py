@@ -48,7 +48,7 @@ class PinguCam:
     def voice_handler(self):
 
         CHUNK_SIZE = 1024
-        MIN_VOLUME = 400
+        MIN_VOLUME = 150
 
         BUF_MAX_SIZE = CHUNK_SIZE * 10
 
