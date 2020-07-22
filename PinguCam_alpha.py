@@ -4,6 +4,10 @@ from pynput.mouse import Controller
 from pynput.keyboard import Listener
 from screeninfo import get_monitors
 from _thread import start_new as thread
+import pyaudio
+from array import array
+
+
 
 
 class PinguCam:
@@ -22,6 +26,8 @@ class PinguCam:
         self.y = 0
         self.keyboard_press = False
 
+        self.isTalking = False
+
     def on_mouse_move(self, x, y):
         self.x = x
         self.y = y
@@ -38,6 +44,33 @@ class PinguCam:
                 while self.Start:
                     pass
 
+    
+    def voice_handler(self):
+
+        CHUNK_SIZE = 1024
+        MIN_VOLUME = 400
+
+        BUF_MAX_SIZE = CHUNK_SIZE * 10
+
+
+        stream = pyaudio.PyAudio().open(
+                format=pyaudio.paInt16,
+                channels=2,
+                rate=44100,
+                input=True,
+                frames_per_buffer=1024,
+            )
+
+        while self.Start:
+
+            chunk = array('h', stream.read(CHUNK_SIZE))
+            vol = max(chunk)
+            if vol >= MIN_VOLUME:
+                self.isTalking = True
+            else:
+                self.isTalking = False
+
+
     def init(self):
 
         pygame.init()
@@ -48,6 +81,7 @@ class PinguCam:
         #Test set up images, maybe add more customization options?
 
         self.display.fill(self.GREEN)
+
 
         self.LAYOUT_HAND_UP = pygame.image.load(os.path.join("images","layout_hand_up.png"))
         self.LAYOUT_HAND_UP.convert_alpha()
@@ -60,6 +94,9 @@ class PinguCam:
 
         self.MOUSE_HAND = pygame.image.load(os.path.join("images","mouse_hand.png"))
         self.MOUSE_HAND.convert_alpha()
+
+        self.MOUTH_OPEN = pygame.image.load(os.path.join("images", "mouth_open.png"))
+        self.MOUTH_OPEN.convert_alpha()
 
         # Mousepad coordinates
         self.TOP_LEFT = 217, 195 
@@ -79,6 +116,9 @@ class PinguCam:
 
         thread(self.keyboard_input_handler, ())
 
+        thread(self.voice_handler, ())
+
+
         while self.Start:
             self.display.fill(self.GREEN)
             
@@ -93,6 +133,10 @@ class PinguCam:
 
             #this is just a test, i promise!
             self.display.blit(self.MOUSE_HAND, (233,135))
+        
+            if self.isTalking:
+                self.display.blit(self.MOUTH_OPEN, (280,55))
+
             pygame.display.flip()
 
             for event in pygame.event.get():
