@@ -100,7 +100,7 @@ class PinguCam:
 
         # Mousepad coordinates
         self.TOP_LEFT = 210, 175 
-        self.TOP_RIGHT= 118, 176
+        self.TOP_RIGHT= 155, 160
         self.BOTTOM_LEFT = 245, 165
         self.BOTTOM_RIGHT = 170, 140
         self.remap = lambda x, amin, amax, bmin, bmax: (x - amin) * (bmax - bmin) / (amax - amin) + bmin
