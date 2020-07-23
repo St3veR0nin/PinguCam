@@ -85,16 +85,16 @@ class PinguCam:
         
         while self.Start:
 
-            _, frame = webcam.read()
-            gaze.refresh(frame)
+            _, frame = self.webcam.read()
+            self.gaze.refresh(frame)
 
-            hr, vr =  gaze.horizontal_ratio(), gaze.vertical_ratio()
+            hr, vr =  self.gaze.horizontal_ratio(), self.gaze.vertical_ratio()
             if hr != None and vr != None:
                 self.eye_horizontal_ratio = hr
                 self.eye_vertical_ratio = vr
 
-                #gaze.pupil_left_coords()
-                #gaze.pupil_right_coords()
+                #self.gaze.pupil_left_coords()
+                #self.gaze.pupil_right_coords()
                 # If not None, the return value of these functions represents the current coords of the pupils.
 
 
