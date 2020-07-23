@@ -99,9 +99,9 @@ class PinguCam:
         self.MOUTH_OPEN.convert_alpha()
 
         # Mousepad coordinates
-        self.TOP_LEFT = 217, 195 
+        self.TOP_LEFT = 210, 175 
         self.TOP_RIGHT= 118, 176
-        self.BOTTOM_LEFT = 271, 165
+        self.BOTTOM_LEFT = 245, 165
         self.BOTTOM_RIGHT = 170, 140
         self.remap = lambda x, amin, amax, bmin, bmax: (x - amin) * (bmax - bmin) / (amax - amin) + bmin
 
