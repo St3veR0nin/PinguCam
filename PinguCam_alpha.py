@@ -6,12 +6,15 @@ from screeninfo import get_monitors
 from _thread import start_new as thread
 import pyaudio
 from array import array
-
+import cv2
+from gaze_tracking import GazeTracking
 
 
 
 class PinguCam:
     def __init__(self):
+
+
         self.Start = False
         self.GREEN = (39, 217, 42)
         self.width = 0
@@ -22,11 +25,18 @@ class PinguCam:
             if self.height <= mon.height:
                 self.height = mon.height
         
+        self.gaze = GazeTracking()
+        self.webcam = cv2.VideoCapture(0)
+        
         self.x = 0
         self.y = 0
         self.keyboard_press = False
 
         self.isTalking = False
+    
+        self.eye_horizontal_ratio = 0.0
+        self.eye_vertical_ratio = 0.0
+
 
     def on_mouse_move(self, x, y):
         self.x = x
@@ -71,6 +81,23 @@ class PinguCam:
                 self.isTalking = False
 
 
+    def eye_tracker(self):
+        
+        while self.Start:
+
+            _, frame = webcam.read()
+            gaze.refresh(frame)
+
+            hr, vr =  gaze.horizontal_ratio(), gaze.vertical_ratio()
+            if hr != None and vr != None:
+                self.eye_horizontal_ratio = hr
+                self.eye_vertical_ratio = vr
+
+                #gaze.pupil_left_coords()
+                #gaze.pupil_right_coords()
+                # If not None, the return value of these functions represents the current coords of the pupils.
+
+
     def init(self):
 
         pygame.init()
@@ -98,6 +125,9 @@ class PinguCam:
         self.MOUTH_OPEN = pygame.image.load(os.path.join("images", "mouth_open.png"))
         self.MOUTH_OPEN.convert_alpha()
 
+        self.PUPIL = pygame.image.load(os.path.join("images", "pupil.png"))
+
+
         # Mousepad coordinates
         self.TOP_LEFT = 210, 175 
         self.TOP_RIGHT= 155, 160
@@ -105,10 +135,27 @@ class PinguCam:
         self.BOTTOM_RIGHT = 170, 140
         self.remap = lambda x, amin, amax, bmin, bmax: (x - amin) * (bmax - bmin) / (amax - amin) + bmin
 
+        #eyes rectangles coordinates
+
+        self.LE_TOP_LEFT = 365, 45
+        self.LE_TOP_RIGHT = 345, 45
+        self.LE_BOTTOM_LEFT = 365, 65
+        self.LE_BOTTOM_RIGHT = 345, 65 
+
+        self.RE_TOP_LEFT = 300, 35
+        self.RE_TOP_RIGHT = 290, 35
+        self.RE_BOTTOM_LEFT = 300, 55
+        self.RE_BOTTOM_RIGHT = 290, 55 
+
+
+
     def remap_mousepad(self, x, y):
         ya = self.remap(y, 0, self.height, self.TOP_LEFT[0], self.BOTTOM_LEFT[0]), self.remap(y, 0, self.height, self.TOP_LEFT[1], self.BOTTOM_LEFT[1])
         yb = self.remap(y, 0, self.height, self.TOP_RIGHT[0], self.BOTTOM_RIGHT[0]), self.remap(y, 0, self.height, self.TOP_RIGHT[1], self.BOTTOM_RIGHT[1])
         return self.remap(x, 0, self.width, ya[0], yb[0]), self.remap(x, 0, self.width, ya[1], yb[1])
+
+
+
 
     def start(self):
         self.Start = True
@@ -117,6 +164,8 @@ class PinguCam:
         thread(self.keyboard_input_handler, ())
 
         thread(self.voice_handler, ())
+
+        thread(self.eye_tracker, ())
 
 
         while self.Start:
@@ -133,7 +182,11 @@ class PinguCam:
 
             #this is just a test, i promise!
             self.display.blit(self.MOUSE_HAND, (233,135))
-        
+
+            #Blit the pupils according to coords or horizontal/vertical ratio...
+            #self.display.blit(self.PUPIL, ())
+            #self.display.blit(self.PUPIL, ())
+
             if self.isTalking:
                 self.display.blit(self.MOUTH_OPEN, (280,55))
 
